@@ -1,0 +1,61 @@
+if [ $# == 2 ]
+	then
+	#echo "Datum: $1";
+	#echo "Code: $2";
+
+	STATION=$1;
+	DATE=$2;
+	
+	D1=$(echo $DATE | cut -d "-" -f 1)
+	D2=$(echo $DATE | cut -d "-" -f 2)
+	D3=$(echo $DATE | cut -d "-" -f 3)
+
+	USDATE="$D2/$D1/$D3"
+
+	BEGIN=$(date -d $USDATE +%s)
+	DAY=$(bc <<< "60*60*24")
+	END=$(bc <<< $BEGIN+$DAY)
+
+	URL='https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&stationString='
+
+	READY="$URL$STATION&startTime=$BEGIN&endTime=$END";
+	curl -s $READY
+
+
+elif [ $# == 3 ]
+	then
+	STATION=$1;
+	DATE1=$2;
+	DATE2=$3;
+
+	D1=$(echo $DATE1 | cut -d "-" -f 1)
+        D2=$(echo $DATE1 | cut -d "-" -f 2)
+        D3=$(echo $DATE1 | cut -d "-" -f 3)
+
+        USDATE1="$D2/$D1/$D3"
+
+	BEGIN1=$(date -d $USDATE1 +%s)
+        DAY=$(bc <<< "60*60*24")
+        END1=$(bc <<< $BEGIN1+$DAY)
+
+	URL='https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&stationString='
+
+	READY1="$URL$STATION&startTime=$BEGIN1&endTime=$END1"
+
+	D1=$(echo $DATE2 | cut -d "-" -f 1)
+        D2=$(echo $DATE2 | cut -d "-" -f 2)
+        D3=$(echo $DATE2 | cut -d "-" -f 3)
+	
+	USDATE2="$D2/$D1/$D3"
+
+	BEGIN2=$(date -d $USDATE2 +%s)
+	END2=$(bc <<< $BEGIN2+$DAY)
+
+	READY2="$URL$STATION&startTime=$BEGIN2&endTime=$END2"
+	#echo $READY1
+	#echo $READY2
+	curl -s $READY1
+	curl -s $READY2
+else
+	echo "INVALID NUMBER OF ARGUMENTS"
+fi

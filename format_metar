@@ -1,0 +1,31 @@
+cat <<THE_END
+<html>
+<body>
+<table border="1">
+<tr>
+<th>"Date and time"</th><th>Temperature<th></th>Pressure</th>
+</tr>
+THE_END
+
+while read LINE
+do
+DATE=$(echo $LINE | cut -d "," -f 3)
+D1=$(echo $DATE | cut -d "-" -f 1)
+D2=$(echo $DATE | cut -d "-" -f 2)
+D3=$(echo $DATE | cut -d "-" -f 3 | cut -d "T" -f 1)
+TIME=$(echo $DATE | cut -d "T" -f 2) 
+HOURS=$(echo $TIME | cut -d ":" -f 1)
+MIN=$(echo $TIME | cut -d ":" -f 2)
+TEMP=$(echo $LINE | cut -d "," -f 6)
+PRESS=$(echo $LINE | cut -d "," -f 13)
+echo "<td>$D1.$D2.$D3 $HOURS:$MINS</td>"
+echo "<td>$TEMP</td>"
+echo "<td>$PRESS</td>"
+done
+cat <<THE_END
+</html>
+</body>
+</table>
+</tr>
+THE_END
+
